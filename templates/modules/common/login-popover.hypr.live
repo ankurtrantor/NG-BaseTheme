@@ -1,4 +1,4 @@
-<div class="mz-popover mz-popover-login mz-l-slidebox">
+<!--<div class="mz-popover mz-popover-login mz-l-slidebox">
   <div class="mz-l-slidebox-outer">
     <div class="mz-l-slidebox-inner">
       <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
@@ -18,4 +18,4 @@
     </div>
   </div>
   <section data-mz-role="popover-message" class="mz-popover-message"></section>
-</div>
+</div>-->

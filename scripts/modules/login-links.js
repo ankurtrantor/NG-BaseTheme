@@ -135,7 +135,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     $.extend(LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
         template: Hypr.getTemplate('modules/common/login-popover').render(),
-        bindListeners: function (on) {
+        bindListeners: function (on) { 
             var onOrOff = on ? "on" : "off";
             this.$parent[onOrOff]('click', '[data-mz-action="forgotpasswordform"]', this.slideRight);
             this.$parent[onOrOff]('click', '[data-mz-action="loginform"]', this.slideLeft);
@@ -306,7 +306,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
         $('[data-mz-action="login"]').each(function() {
             var popover = new LoginPopover();
-            popover.init(this);
+            popover.init(this); 
             $(this).data('mz.popover', popover);
         });
         $('[data-mz-action="signup"]').each(function() {
@@ -331,9 +331,20 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             });
            
         });
+        $('[data-mz-action="submitlogin"]').on('click', function(e) {
+            e.preventDefault();
+            //this.loading = yes;
+            //this.$parent[yes ? 'addClass' : 'removeClass']('is-loading');
+            alert($('.user-email').val());
+            api.action('customer', 'loginStorefront', {
+                email: $('.user-email').val(),
+                password: $('.user-pass').val()
+            }).then(this.displayApiMessage);
+           
+        });
         $('[data-mz-action="launchforgotpassword"]').each(function() {
             var popover = new LoginPopover();
-            popover.init(this);
+            popover.init(this); 
             $(this).data('mz.popover', popover);
         });
         $('[data-mz-action="signuppage-submit"]').each(function(){
@@ -378,6 +389,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 });
             }
             
+        });
+        $('body').on('click', '.new-shopper', function () {
+            $('.model-anchor').attr('data-mz-action', 'signup');
+            alert($('.model-anchor').attr('data-mz-action'));
+        });
+        $('body').on('click', '.new-login', function () {
+            $('.model-anchor').attr('data-mz-action', 'login');
+            alert($('.model-anchor').attr('data-mz-action'));
         });
     });
 
