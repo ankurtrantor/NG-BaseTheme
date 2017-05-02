@@ -134,7 +134,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     LoginPopover.prototype = new DismissablePopover();
     $.extend(LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
-        template: Hypr.getTemplate('modules/common/login-popover').render(),
+        template: Hypr.getTemplate('modules/common/login-popover'),
         bindListeners: function (on) { 
             var onOrOff = on ? "on" : "off";
             this.$parent[onOrOff]('click', '[data-mz-action="forgotpasswordform"]', this.slideRight);
@@ -177,8 +177,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         login: function () {
             this.setLoading(true);
             api.action('customer', 'loginStorefront', {
-                email: this.$parent.find('[data-mz-login-email]').val(),
-                password: this.$parent.find('[data-mz-login-password]').val()
+                email: this.$parents('.login-fields').find('[data-mz-login-email]').val(),
+                password: this.$parents('.login-fields').find('[data-mz-login-password]').val()
             }).then(this.handleLoginComplete.bind(this, this.$parent.find('input[name=returnUrl]').val()), this.displayApiMessage);
         },
         anonymousorder: function() {
@@ -334,13 +334,48 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         $('[data-mz-action="submitlogin"]').on('click', function(e) {
             e.preventDefault();
             //this.loading = yes;
-            //this.$parent[yes ? 'addClass' : 'removeClass']('is-loading');
-            alert($('.user-email').val());
+            $(this).addClass('is-loading');
+            /*define(["modules/jquery-mozu", "modules/backbone-mozu", "hyprlive", "modules/api"],
+                function ($, Backbone, Hypr, api) {
+
+                    var Login = Backbone.MozuModel.extend({
+                        initialize : function() {
+                           this.on("invalid",function(model,error) {
+                              return(error);
+                           });
+                        },
+                        validate: function(attributes) {
+                            var email_filter    = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                            if (!email_filter.test(attributes.email))
+                                return 'Error!!! ';
+                           if ( attributes.name < 25 ) {
+                              return 'Person age is less than 25, please enter the correct age!!! ';
+                           }
+                           if ( ! attributes.email ) {
+                              return 'please enter the email!!!';
+                           }
+                        }
+                    });
+                }
+            );
+            
+            var login = new Login();
+            login.on('invalid', function() {
+                alert('invalid');
+            });
+            login.set({ email : $('.user-email').val() },{ validate : true });
+            alert();*/
+            //if($('.user-email').val() === "")
+            //    return false;
+            //if($('.user-pass').val() === "")
+            //    return false;
             api.action('customer', 'loginStorefront', {
-                email: $('.user-email').val(),
+                email: $('.user-email').val(), 
                 password: $('.user-pass').val()
-            }).then(this.displayApiMessage);
-           
+            }).then(this.displayApiMessage);           
+        });
+        $('.cancel-modal').on('click', function(e) {
+            $('#myModal').modal('hide');
         });
         $('[data-mz-action="launchforgotpassword"]').each(function() {
             var popover = new LoginPopover();

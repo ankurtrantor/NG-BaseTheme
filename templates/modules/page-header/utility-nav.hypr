@@ -25,7 +25,7 @@
         </li>      
         <li class="mz-utilitynav-item">
              <!--<a href="/user/login" data-mz-action="login" data-placement="bottom" class="mz-utilitynav-link">{{ labels.logIn }}</a>-->
-            
+             
             <!-- Button trigger modal -->
             <a type="button" data-mz-action="login" class="login-link-text model-anchor" data-toggle="modal" data-target="#myModal">
               login
@@ -41,58 +41,57 @@
                                     <li class=" first-tab active"><div class="arrow"></div><a class="btn login-btn login-tab-btn new-login" data-toggle="tab" href="#login">Login</a></li>
                                     <li class="second-tab"><div class="arrow"></div><a class="btn login-btn new-shopper" data-toggle="tab" href="#newshopper">New Shopper</a></li>
                                 </ul> 
-                                <div class="tab-content">
+                                <div class="tab-content login-fields">
                                     <!--<div class="tab-pane active" id="login">
                                         <p class="login-text">Login with an email address and password.</p>
                                         <div class="input-group">
                                             <span class="input-group-addon glyphicon glyphicon-envelope" id="email" aria-hidden="true"></span>                                 
                                             <input type="text" class="form-control" placeholder="Email Address" aria-describedby="basic-addon1">
+                                            <span class="input-group-addon glyphicon glyphicon-lock" id="password"></span>
+                                            <input type="text" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
                                         </div>
                                         <div class="input-group">
                                             <span class="input-group-addon glyphicon glyphicon-lock" id="password"></span>
                                             <input type="text" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
                                         </div>
-                                        <div class="link-button"><a href="#">Forget Password</a></div>    
-                                        <div class="login-btn-row">
-                                            <div class="col-xs-4 left-column">
-                                                <div class="link-button"><a href="#">CANCEL</a></div>
-                                            </div>
-                                            <div class="col-xs-8">                                    
-                                                <button class="btn login-btn" type="submit">LOGIN</button>
-                                            </div>
+                                        <div class="link-button"><a href="#">Forget Password</a></div> 
+                                        <div class="login-btn-row col-xs-4 left-column">
+                                            <div class="link-button"><a href="#">CANCEL</a></div>
+                                        </div>
+                                        <div class="login-btn-row col-xs-8 mz-popover-action">                                    
+                                            <button class="btn login-btn" data-mz-action="submitlogin" type="submit">LOGIN</button>
                                         </div>
                                         <div class="col-xs-12 bottom-text"><p class="login-text"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Your Connection to this website is secure.</p></div>
                                     </div>-->
                                     <div class="tab-pane active" id="login" data-mz-role="login-form">
                                         <p class="login-text">Login with an email address and password.</p>
-                                        <div class="input-group abc">
+                                        <div class="input-group">
                                             <span class="input-group-addon glyphicon glyphicon-envelope" id="email" aria-hidden="true"></span>
-                                            <input name="email" class="form-control user-email" aria-describedby="basic-addon1" placeholder="{{ labels.logInInput }}" type="text" />                               
+                                            <input name="email" class="form-control user-email" aria-describedby="basic-addon1" placeholder="{{ labels.logInInput }}" type="email" required />                              
                                             <!--<input type="text" class="form-control" placeholder="Email Address" aria-describedby="basic-addon1">-->
                                         </div>
-                                        <div class="input-group abc">
+                                        <div class="input-group">
                                             <span class="input-group-addon glyphicon glyphicon-lock" id="password"></span>
-                                            <input name="password" class="form-control user-pass"  aria-describedby="basic-addon1" placeholder="{{ labels.password }}" type="password" />
+                                            <input name="password" class="form-control user-pass"  aria-describedby="basic-addon1" placeholder="{{ labels.password }}" type="password" required/>
                                             <!--<input type="text" class="form-control" placeholder="Password" aria-describedby="basic-addon1">-->
                                         </div>
                                         <div class="link-button" data-mz-role="forgotpassword-form">
                                           <!--<label>{{ labels.resetPassword }}</label>
                                           <input type="email" name="reset-password" placeholder="{{ labels.emailAddress }}" />
                                           <div class="mz-popover-action">
-                                            (<a href="javascript:;">{{ labels.cancel }}</a>) <button class="mz-button" data-mz-action="submitforgotpassword">{{ labels.sendEmail }}</button>
+                                            (<a href="javascript:;">{{ labels.cancel }}</a>) 
                                           </div>-->
                                           <a href="#">Forget Password</a>
-                                        </div>    
-                                        <div class="login-btn-row">
-                                            <div class="col-xs-4 left-column">
-                                                <div class="link-button"><a href="#">CANCEL</a></div>
-                                            </div>
-                                            <div class="col-xs-8">
-                                              <div class="mz-popover-action">
-                                                (<a data-mz-action="forgotpasswordform" href="javascript:;">{{ labels.forgotPasswordLink }}</a>) <button class="mz-button" data-mz-action="submitlogin">{{ labels.logIn }}</button>
-                                              </div>                                    
-                                                <!--<button class="btn login-btn" type="submit">LOGIN</button>-->
-                                            </div>
+                                        </div>
+                                        <div class="login-btn-row col-xs-4 left-column">
+                                            <div class="link-button cancel-modal"><a href="#">CANCEL</a></div>
+                                        </div>
+                                        <div class="login-btn-row col-xs-8">
+                                          <div class="mz-popover-action">
+                                            <button class="mz-button" data-mz-action="submitlogin">{{ labels.logIn }}</button>
+                                            <input type="hidden" class="hidden-return" name="returnUrl" value="{{ model.returnUrl }}" />
+                                          </div>                                    
+                                            <!--<button class="btn login-btn" type="submit">LOGIN</button>-->
                                         </div>
                                         <div class="col-xs-12 bottom-text"><p class="login-text"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Your Connection to this website is secure.</p></div>
                                     </div>   
