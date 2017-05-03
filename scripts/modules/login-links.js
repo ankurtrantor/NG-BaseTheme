@@ -1,8 +1,8 @@
 /**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'hyprlivecontext', 'vendor/jquery-placeholder/jquery.placeholder'],
-     function ($, api, Hypr, _, HyprLiveContext) {
+define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', "backbone", 'modules/api', 'hyprlive', 'underscore', 'hyprlivecontext', 'vendor/jquery-placeholder/jquery.placeholder', "modules/backbone-mozu-validation"],
+     function ($, Backbone, api, Hypr, _, HyprLiveContext) {
 
     var usePopovers = function() {
         return !Modernizr.mq('(max-width: 480px)');
@@ -45,7 +45,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         },
         setLoading: function (yes) {
             this.loading = yes;
-            this.$parent[yes ? 'addClass' : 'removeClass']('is-loading');
+            //this.$parent[yes ? 'addClass' : 'removeClass']('is-loading');
+            if(yes)
+                $(this).addClass('is-loading');
+            else
+                $(this).removeClass('is-loading');
         },
         onPopoverShow: function () {
             var self = this;
@@ -105,8 +109,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 Hypr.getLabel('unexpectedError'));
         },
         displayMessage: function (msg) {
-            this.setLoading(false);
+            this.setLoading(false); console.log(msg);
             this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
+            //$('.login-error').html('<span class="mz-validationmessage">' + msg + '</span>');
         },
         init: function (el) {
             this.$el = $(el);
@@ -134,7 +139,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     LoginPopover.prototype = new DismissablePopover();
     $.extend(LoginPopover.prototype, {
         boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
-        template: Hypr.getTemplate('modules/common/login-popover'),
+        /*template: Hypr.getTemplate('modules/common/login-popover'),*/
         bindListeners: function (on) { 
             var onOrOff = on ? "on" : "off";
             this.$parent[onOrOff]('click', '[data-mz-action="forgotpasswordform"]', this.slideRight);
@@ -174,7 +179,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             if (e) e.preventDefault();
             this.$slideboxOuter.css('left', 0);
         },
-        login: function () {
+        login: function () { 
             this.setLoading(true);
             api.action('customer', 'loginStorefront', {
                 email: this.$parents('.login-fields').find('[data-mz-login-email]').val(),
@@ -334,45 +339,38 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         $('[data-mz-action="submitlogin"]').on('click', function(e) {
             e.preventDefault();
             //this.loading = yes;
-            $(this).addClass('is-loading');
-            /*define(["modules/jquery-mozu", "modules/backbone-mozu", "hyprlive", "modules/api"],
-                function ($, Backbone, Hypr, api) {
-
-                    var Login = Backbone.MozuModel.extend({
-                        initialize : function() {
-                           this.on("invalid",function(model,error) {
-                              return(error);
-                           });
-                        },
-                        validate: function(attributes) {
-                            var email_filter    = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-                            if (!email_filter.test(attributes.email))
-                                return 'Error!!! ';
-                           if ( attributes.name < 25 ) {
-                              return 'Person age is less than 25, please enter the correct age!!! ';
-                           }
-                           if ( ! attributes.email ) {
-                              return 'please enter the email!!!';
-                           }
-                        }
-                    });
+            var user_email = $('.user-email').val();          
+            if($('.user-email').val() === "" || $('.user-pass').val() === "")
+                return false;
+            $(this).addClass('is-loading'); 
+            var returnUrl = $('#returnUrl').val();
+            var ValidationModel = Backbone.MozuModel.extend({
+                validation: {
+                    email: {
+                        required: true,
+                        email: true,
+                        msg: 'no message'
+                    }
                 }
-            );
-            
-            var login = new Login();
-            login.on('invalid', function() {
-                alert('invalid');
-            });
-            login.set({ email : $('.user-email').val() },{ validate : true });
-            alert();*/
-            //if($('.user-email').val() === "")
-            //    return false;
-            //if($('.user-pass').val() === "")
-            //    return false;
+            }); 
+            var val_model = new ValidationModel({
+                email: user_email
+            }); 
+            console.log(val_model.isValid('user_email')); 
+            //console.log(val_model.isValid('email')); 
+            /*if(val_model.isValid(true)){ 
+                alert('true');
+            }else alert('not valid');*/
             api.action('customer', 'loginStorefront', {
                 email: $('.user-email').val(), 
                 password: $('.user-pass').val()
-            }).then(this.displayApiMessage);           
+            }).then(function(){ alert();
+                if ( returnUrl ){
+                    window.location.href= returnUrl;
+                }else{
+                    window.location.reload();
+                }  
+            }, this.displayApiMessage); 
         });
         $('.cancel-modal').on('click', function(e) {
             $('#myModal').modal('hide');
@@ -427,11 +425,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         });
         $('body').on('click', '.new-shopper', function () {
             $('.model-anchor').attr('data-mz-action', 'signup');
-            alert($('.model-anchor').attr('data-mz-action'));
+            //alert($('.model-anchor').attr('data-mz-action'));
         });
         $('body').on('click', '.new-login', function () {
             $('.model-anchor').attr('data-mz-action', 'login');
-            alert($('.model-anchor').attr('data-mz-action'));
+            //alert($('.model-anchor').attr('data-mz-action'));
         });
     });
 
